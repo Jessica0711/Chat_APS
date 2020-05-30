@@ -8,19 +8,16 @@ package controller;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.Socket;
 
 import dao.MensagensDao;
 import model.Arquivo;
 import model.Mensagem;
-import util.Porta;
 import view.Chat;
 import view.Inicio;
+
+import javax.sound.midi.Soundbank;
 
 /**
  *
@@ -35,6 +32,7 @@ public class ClienteController {
 
 		Inicio inicio = new Inicio();
 		inicio.setVisible(true);
+
 	}
 
 	public void iniciarConexao(Chat chat) {
@@ -44,9 +42,17 @@ public class ClienteController {
 			showMessageDialog(null, "Servidor não conectado", "", ERROR_MESSAGE);
 			System.exit(0);
 		}
-		Thread();
 		setChat(chat);
-		getChat().setSocket(socket);
+		try{
+			getChat().setSocket(socket);
+			ClientListener clientListener = new ClientListener(socket, chat);
+			chat.setOut(clientListener.getOutputStream());
+			new Thread(clientListener).start();
+		}catch (Exception e){
+			System.out.println(e.getMessage());
+		}
+
+		Thread();
 	}
 
 	private void Thread() {
@@ -57,28 +63,11 @@ public class ClienteController {
 
 				try {
 					chat.mensagens();
-					ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+					System.out.println("mensagens");
 
-					while (input.readObject() != null) {
-						if (input.readObject() instanceof Mensagem) {
-							Mensagem mensagem = (Mensagem) input.readObject();
-							MensagensDao.getInstance().create(mensagem);
-							chat.mensagens();
-						}
-						if (input.readObject() instanceof Arquivo) {
-							byte[] objectAsByte = new byte[socket.getReceiveBufferSize()];
-							BufferedInputStream bf = new BufferedInputStream(socket.getInputStream());
-							bf.read(objectAsByte);
-							Arquivo arquivo = (Arquivo) getObjectFromByte(objectAsByte);
-							String dir = arquivo.getDiretorioDestino().endsWith("/")
-									? arquivo.getDiretorioDestino() + arquivo.getNome()
-									: arquivo.getDiretorioDestino() + "/" + arquivo.getNome();
-							FileOutputStream fos = new FileOutputStream(dir);
-							fos.write(arquivo.getConteudo());
-							fos.close();
-						}
-					}
-				} catch (IOException | ClassNotFoundException ex) {
+
+
+				} catch (Exception ex) {
 					showMessageDialog(null, "Erro na conexão com o servidor", "", ERROR_MESSAGE);
 				}
 			}

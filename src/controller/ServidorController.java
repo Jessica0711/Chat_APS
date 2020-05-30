@@ -5,11 +5,7 @@
  */
 package controller;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.Socket;
 
 import cliente.Cliente;
@@ -17,7 +13,6 @@ import dao.MensagensDao;
 import model.Arquivo;
 import model.Mensagem;
 import servidor.Servidor;
-import view.Chat;
 
 /**
  *
@@ -35,14 +30,16 @@ public class ServidorController {
 			@Override
 			public void run() {
 				try {
-					ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+					System.out.println("inicio");
+					DataInputStream input = new DataInputStream(socket.getInputStream());
 
-					while (input.readObject() != null) {
-						if (input.readObject() instanceof Mensagem) {
+					while (input != null) {
+						System.out.println(input);
+						/*if (input.readObject() instanceof Mensagem) {
 							Mensagem mensagem = (Mensagem) input.readObject();
 							MensagensDao.getInstance().create(mensagem);
+							System.out.println("read mensagem send client");
 							cliente.enviarMensagem(mensagem);
-							Chat.mensagens();
 						}
 						if (input.readObject() instanceof Arquivo) {
 							byte[] objectAsByte = new byte[socket.getReceiveBufferSize()];
@@ -55,10 +52,10 @@ public class ServidorController {
 							FileOutputStream fos = new FileOutputStream(dir);
 							fos.write(arquivo.getConteudo());
 							fos.close();
-						}
+						}*/
 					}
 
-				} catch (IOException | ClassNotFoundException ex) {
+				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 			}
@@ -82,10 +79,6 @@ public class ServidorController {
 			e.printStackTrace();
 		}
 		return obj;
-	}
-	
-	public static void close() {
-		System.exit(0);
 	}
 
 }

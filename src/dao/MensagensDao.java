@@ -73,7 +73,7 @@ public class MensagensDao implements Persistencia<Mensagem> {
 				Mensagem mensagens = new Mensagem(mensagem, usuario);
 				lista.add(mensagens);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			ConnectionFactory.closeConnection(con, pst);

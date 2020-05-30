@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import model.Arquivo;
 import model.Mensagem;
+import servidor.Servidor;
 
 /**
  *
@@ -23,15 +24,15 @@ public class Cliente {
 	}
 
 	public void enviarMensagem(Mensagem mensagem) {
-
-		for (ObjectOutputStream cliente : getClientes()) {
+		//Servidor.enviarMensagem(mensagem);
+		/*for (ObjectOutputStream cliente : getClientes()) {
 			try {
 				cliente.writeObject(mensagem);
 				cliente.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 	}
 
 	public void enviarArquivo(Arquivo arquivo) {

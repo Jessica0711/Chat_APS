@@ -5,13 +5,10 @@ import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 import java.awt.event.KeyEvent;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.List;
 
-import controller.ServidorController;
 import dao.MensagensDao;
 import model.Mensagem;
 
@@ -23,6 +20,7 @@ public class Chat extends javax.swing.JFrame {
 
 	private String nome;
 	private Socket socket;
+	private ObjectOutputStream out = null;
 
 	public Chat() {
 		initComponents();
@@ -169,6 +167,11 @@ public class Chat extends javax.swing.JFrame {
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
 
+
+	public void setOut(ObjectOutputStream out) {
+		this.out = out;
+	}
+
 	private void txMensagemEnviarKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txMensagemEnviarKeyPressed
 		if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
 			this.enviarMensagem();
@@ -183,7 +186,7 @@ public class Chat extends javax.swing.JFrame {
 	private void btSairActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btSairActionPerformed
 		try {
 			getSocket().close();
-			ServidorController.close();
+			System.exit(0);
 		} catch (IOException ex) {
 		}
 	}// GEN-LAST:event_btSairActionPerformed
@@ -198,25 +201,39 @@ public class Chat extends javax.swing.JFrame {
 	private void enviarMensagem() {
 		String mensagem = null;
 		try {
-			ObjectOutputStream output = new ObjectOutputStream(getSocket().getOutputStream());
+
 			mensagem = txMensagemEnviar.getText();
-			Mensagem message = new Mensagem(mensagem, getNome());
-			output.writeObject(message);
-			output.flush();
-			//MensagensDao.getInstance().create(message);
+
 			txMensagemEnviar.setText("");
-			mensagens();
+			sendText(mensagem);
+			//mensagens();
 		} catch (IOException ex) {
 			showMessageDialog(null, "Mensagem não foi enviada", "", ERROR_MESSAGE);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	public static void mensagens() {
+	public void sendText(String mensagem) throws Exception{
+		try {
+			Mensagem message = new Mensagem(mensagem, getNome());
+			MensagensDao.getInstance().create(message);
+			out.writeObject(message);
+			out.flush();
+
+		} catch (Exception e) {
+			System.out.println("Ocorreu um erro no envio da mensagem ao servidor."+e.getMessage());
+			throw new Exception ("Ocorreu um erro no envio da mensagem ao servidor."+e.getMessage());
+		}
+	}
+
+	public void mensagens() {
 		List<Mensagem> mensagens = MensagensDao.getInstance().read();
 		txMensagemRecebida.setText("");
 		for (Mensagem mensagem : mensagens) {
 			txMensagemRecebida.setText(txMensagemRecebida.getText() + "\n" + mensagem.toString());
 		}
+
 	}
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
@@ -229,7 +246,7 @@ public class Chat extends javax.swing.JFrame {
 	private javax.swing.JScrollPane psMenagemRecebida;
 	private javax.swing.JScrollPane psMensagemEnviar;
 	private javax.swing.JTextArea txMensagemEnviar;
-	private static javax.swing.JTextArea txMensagemRecebida;
+	private javax.swing.JTextArea txMensagemRecebida;
 	// End of variables declaration//GEN-END:variables
 
 	/**
@@ -256,7 +273,7 @@ public class Chat extends javax.swing.JFrame {
 	/**
 	 * @param socket the socket to set
 	 */
-	public void setSocket(Socket socket) {
+	public void setSocket(Socket socket) throws IOException {
 		this.socket = socket;
 	}
 

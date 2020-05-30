@@ -6,7 +6,6 @@
 package view;
 
 import controller.ClienteController;
-import controller.ServidorController;
 import dao.UsuarioDAO;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -17,7 +16,6 @@ import model.Usuario;
  * @author Jéssica
  */
 public class Inicio extends javax.swing.JFrame {
-
     /**
      * Creates new form Inicio
      */
@@ -263,7 +261,7 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_pfSenhaActionPerformed
 
     private void btSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSairActionPerformed
-        ServidorController.close();
+        System.exit(0);
     }//GEN-LAST:event_btSairActionPerformed
 
     private void btCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCadastrarActionPerformed
@@ -273,7 +271,7 @@ public class Inicio extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btCadastrarActionPerformed
 
-    private void inicializar(){        
+    private void inicializar(){
         Usuario usuario = UsuarioDAO.getInstance().findUser(tfNome.getText(), String.copyValueOf(pfSenha.getPassword()), Integer.valueOf(tfEquipe.getText()));
         if(verificaUsuario(usuario)){
             Chat chat = new Chat();

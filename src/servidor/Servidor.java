@@ -7,8 +7,11 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import cliente.Cliente;
+import controller.ClientListener;
+import controller.ServerListener;
 import controller.ServidorController;
-import view.Chat;
+import model.Mensagem;
+
 /**
  *
  * @author Lais
@@ -23,25 +26,28 @@ public class Servidor{
            
         public void rodarServer(){
             //String mensagemRecebida;
-            ArrayList <ObjectOutputStream> clientes = new ArrayList<>();
+
             try{
-            ServerSocket soc = new ServerSocket (this.porta);
-            Socket socket;
-            
-            
+                ServerSocket soc = new ServerSocket (this.porta);
+
                 while(true){
-                    socket = soc.accept();      
-                       clientes.add(new ObjectOutputStream(socket.getOutputStream()));
-                       Cliente cliente = new Cliente(clientes);
-                       ServidorController controller = new ServidorController();
-                       controller.threadServidor(socket, cliente);
-                       Chat.mensagens();
+                    System.out.println("Aguardando conexão...");
+                    Socket socket = soc.accept();
+                    System.out.println("Cliente conectado...");
+                    //System.out.println(clientes.size());
+                    System.out.println(socket.getInetAddress().getHostAddress());
+                    ServerListener serverListener = new ServerListener(socket);
+                    //clientes.add(clientListener.getOutputStream());
+                    new Thread(serverListener).start();
                 }
             } catch (IOException ex){
                 ex.printStackTrace();
             
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-     }
+        }
+
 
     /**
      * @return the porta
