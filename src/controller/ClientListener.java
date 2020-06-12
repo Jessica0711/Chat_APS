@@ -1,10 +1,11 @@
 package controller;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
 import model.Mensagem;
 import view.Chat;
-
-import java.io.*;
-import java.net.Socket;
 
 public class ClientListener implements Runnable {
 
@@ -26,12 +27,11 @@ public class ClientListener implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("run");
         Mensagem message = null;
         while(true) {
             try {
                 while ((message = (Mensagem) inputStream.readObject()) != null) {
-                    System.out.println(message);
+                	System.out.println(message);
                     chat.mensagens();
                 }
             } catch (Exception e) {

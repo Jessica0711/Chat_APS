@@ -75,7 +75,7 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Gadugi", 1, 16)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Equipe:");
+        jLabel1.setText("Número Equipe:");
 
         javax.swing.GroupLayout pnDadosLayout = new javax.swing.GroupLayout(pnDados);
         pnDados.setLayout(pnDadosLayout);
@@ -99,7 +99,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                         .addGap(127, 127, 127))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnDadosLayout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(123, 123, 123))))
+                        .addGap(92, 92, 92))))
         );
         pnDadosLayout.setVerticalGroup(
             pnDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,6 +202,7 @@ public class TelaCadastro extends javax.swing.JFrame {
     private void btVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarActionPerformed
         Inicio in = new Inicio();
         in.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btVoltarActionPerformed
 
     private void btCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCadastroActionPerformed

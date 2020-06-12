@@ -1,12 +1,9 @@
 package cliente;
 
-import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import model.Arquivo;
 import model.Mensagem;
-import servidor.Servidor;
 
 /**
  *
@@ -24,26 +21,12 @@ public class Cliente {
 	}
 
 	public void enviarMensagem(Mensagem mensagem) {
-		//Servidor.enviarMensagem(mensagem);
-		/*for (ObjectOutputStream cliente : getClientes()) {
-			try {
-				cliente.writeObject(mensagem);
-				cliente.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}*/
-	}
-
-	public void enviarArquivo(Arquivo arquivo) {
-		for (ObjectOutputStream cliente : getClientes()) {
-			try {
-				cliente.writeObject(arquivo);
-				cliente.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		// Servidor.enviarMensagem(mensagem);
+		/*
+		 * for (ObjectOutputStream cliente : getClientes()) { try {
+		 * cliente.writeObject(mensagem); cliente.flush(); } catch (IOException e) {
+		 * e.printStackTrace(); } }
+		 */
 	}
 
 	// @return the clientes
